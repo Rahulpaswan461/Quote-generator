@@ -1,11 +1,10 @@
 const User = require("../models/user");
+const Quote = require("../models/quote")
 
 async function handleSignupUser(req,res){
     try{
          const {name , email , password } = req.body;
-         if(!name || !email || !password) 
-            return res.status(400).json({msg:"Information incomplete !!"})
-
+        
          let user = new User({
             name: name,
             email: email,
@@ -17,7 +16,7 @@ async function handleSignupUser(req,res){
             return res.status(400).json({msg:"No user created !!!"})
          }
 
-         return res.status(200).json(user)
+         return res.render("home")
     }
     catch(error){
         console.log("There is some error",error)
@@ -36,7 +35,7 @@ async function handleLoginUser(req,res){
       user.isLoggedIn = true;
       await user.save()
 
-      return res.cookie("token",token).json({msg:"logged in successfully !!!"})
+      return res.status(200).cookie("token", token).render("home",{user:user})
     }
     catch(error){
         console.log("There is some error",error)
@@ -48,7 +47,7 @@ async function logoutUser(req,res){
     try{
         const user = req.cookies["token"];
         user.isLoggedIn = false;
-       return res.clearCookie("token").json({msg:"user loggedout successfully !!"})
+       return res.clearCookie("token").redirect("/")
     }
     catch(error){
        console.log("There is some error",error)
@@ -70,9 +69,30 @@ async function stopDailyQuote(req,res){
     }
 }
 
+async function addQuoteToList(req,res){
+    try{
+       let   quote = new Quote({
+            text : req.body.text,
+            author: req.body.author
+        })
+
+        quote = await quote.save()
+       
+        return res.render("home",{
+            user:req.user
+        })
+
+    }
+    catch(error){
+        console.log("There is some error",error)
+        return res.status(500).json({msg:"Internal Server Error"})
+    }
+}
+
 module.exports = {
     handleSignupUser,
     handleLoginUser,
     logoutUser,
-    stopDailyQuote
+    stopDailyQuote,
+    addQuoteToList
 }

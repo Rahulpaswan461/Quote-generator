@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partial/head') %>
+    <title>Add Quote</title>
+</head>
+<body>
+    <%- include('./partial/nav') %>
+    <div class="container" style="margin-top: 2rem;">
+        <form action="/api/quote/add-quote/user" method="POST">
+        <div class="row" style="display: flex;flex-direction: column;">
+            <div class="col">
+              <input type="text" class="form-control" name="text" placeholder="Enter Quote of the Day !" aria-label="Last name">
+            </div><br>
+            <div class="col">
+                <input type="password" name="author" class="form-control"  placeholder="Author" aria-label="Last name">
+              </div>
+          </div><br><br>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          </div>
+        </form>
+        </div>
+        
+    <%- include('./partial/script') %>
+</body>
+</html>

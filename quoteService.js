@@ -8,7 +8,6 @@ async function getRandomQuote(){
     return quote 
 }
 
-
 module.exports ={
     getRandomQuote
 }

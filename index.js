@@ -6,6 +6,7 @@ const bodyParser = require("body-parser")
 const {checkForAuthenticatedUser} = require("./middlewares/auth")
 const cookieParser = require("cookie-parser")
 const quoteRoute = require("./routes/quote")
+const path = require("node:path")
   
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -18,11 +19,16 @@ connectMongoDB(process.env.MONGO_URL)
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(checkForAuthenticatedUser("token"))
+app.set("view engine","ejs")
+app.set("views",path.resolve("./views"))
+app.use(express.urlencoded({extended:false}))
 
 require("./dailyEmailTask")
 
 app.get("/",(req,res)=>{
-    return res.send("From the server")
+    return res.render("home",{
+        user:req.user
+    })
 })
 
 app.use("/api/user",userRoute)
